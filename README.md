@@ -124,9 +124,8 @@ pio pkg install --global --tool tool-jlink
 
 ## 現在残っている課題
 
-1. LED 表示の最終同定
-   - 設計意図は 緑のLED(LED_BLUE)=進捗/正常、赤のLED(LED_RED)=エラー
-   - ただし実機観測とのズレが断続的に発生しており、配線/極性/経路別制御の最終同定が未完了
+1. LED 表示の最終同定 (解決済み)
+   - 実機上で、設計意図どおり 緑のLED(LED_BLUE)=進捗/正常、赤のLED(LED_RED)=エラー を確認済み
 2. RTT ホスト取得経路の整備
    - ファーム側 RTT 出力は有効
    - ただしこの環境では RTT サーバ系ツールが不足しており、現在は RAM 直接ダンプで確認している
@@ -136,3 +135,5 @@ pio pkg install --global --tool tool-jlink
 4. エラー再現時の詳細ダンプ強化
    - ERR/PAGE は出力済み
    - 必要に応じて expected/actual 値や失敗ワード index の追加出力を検討
+5. テスト合格時にブートローダーを書き込む
+   - `monitor_test_until_done.sh` の終了コードが `0` (PASS) の場合のみ、Arduino ブートローダー書き込みを実行する運用を追加する
