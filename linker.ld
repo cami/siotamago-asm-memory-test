@@ -8,9 +8,23 @@ SECTIONS
 {
     .text :
     {
-        /* Initial SP and reset vector */
+        /* Initial SP and vector table */
         LONG(0x20040000);
         LONG(main + 1);
+        LONG(fault_handler + 1);  /* NMI */
+        LONG(fault_handler + 1);  /* HardFault */
+        LONG(fault_handler + 1);  /* MemManage */
+        LONG(fault_handler + 1);  /* BusFault */
+        LONG(fault_handler + 1);  /* UsageFault */
+        LONG(0);
+        LONG(0);
+        LONG(0);
+        LONG(0);
+        LONG(fault_handler + 1);  /* SVC */
+        LONG(fault_handler + 1);  /* DebugMon */
+        LONG(0);
+        LONG(fault_handler + 1);  /* PendSV */
+        LONG(fault_handler + 1);  /* SysTick */
 
         *(.text*)
         *(.rodata*)

@@ -1,0 +1,8 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "JLinkExe": true,
+        "./scripts/build.sh": true,
+        "./scripts/flash_jlink.sh": true,
+        "~/.platformio/packages/toolchain-gccarmnoneeabi/bin/arm-none-eabi-objdump": true
+    }
+}
