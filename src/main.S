@@ -134,7 +134,7 @@ ram_test_all:
 
 ram_test_loop:
     cmp r4, r7
-    bcs ram_test_ok
+    bcs ram_test_alias_check_init
 
     str r5, [r4]
     ldr r0, [r4]
@@ -147,12 +147,23 @@ ram_test_loop:
     bne ram_test_ng
 
     str r4, [r4]
+
+    adds r4, r4, #4
+    b ram_test_loop
+
+ram_test_alias_check_init:
+    ldr r4, =RAM_START
+
+ram_test_alias_check_loop:
+    cmp r4, r7
+    bcs ram_test_ok
+
     ldr r0, [r4]
     cmp r0, r4
     bne ram_test_ng
 
     adds r4, r4, #4
-    b ram_test_loop
+    b ram_test_alias_check_loop
 
 ram_test_ok:
     movs r0, #0
@@ -224,6 +235,9 @@ stage_pass:
     ldr r6, =TEST_STATE_RAM
     movs r0, #TEST_STATE_PASS
     str r0, [r6]
+    ldr r0, =rtt_msg_pass
+    adds r0, r0, r11
+    bl rtt_write_str
 stage_pass_loop:
     ldr r2, =800000
     bl delay_stage
@@ -255,11 +269,6 @@ flash_page_loop:
     bl led_red_off
     bl flash_progress_pulse
 
-    ldr r6, =FLASH_CURSOR_RAM
-    ldr r0, [r6]
-    lsrs r1, r0, #12
-    ands r1, r1, #0x0F
-    b flash_page_log_skip
 flash_page_log_skip:
     ldr r6, =FLASH_CURSOR_RAM
     ldr r12, [r6]
@@ -454,6 +463,7 @@ rtt_write_hex32:
     push {r1-r4, lr}
     mov r1, r0
     ldr r2, =hex_chars
+    adds r2, r2, r11
     movs r3, #8
 rtt_write_hex32_loop:
     lsrs r4, r1, #28
@@ -480,10 +490,12 @@ rtt_log_error:
     mov r2, r1
     mov r1, r0
     ldr r0, =rtt_msg_err
+    adds r0, r0, r11
     bl rtt_write_str
     mov r0, r1
     bl rtt_write_hex32
     ldr r0, =rtt_msg_page_short
+    adds r0, r0, r11
     bl rtt_write_str
     mov r0, r2
     bl rtt_write_hex32
